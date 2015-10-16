@@ -1,6 +1,7 @@
 require File.expand_path(File.join(File.dirname(__FILE__), "/helpers/ruby_env"))
+require File.expand_path(File.join(File.dirname(__FILE__), "/helpers/base_adapter"))
 
-class Rspec2Adapter
+class Rspec2Adapter < BaseAdapter
 
   def self.command(project_path, ruby_interpreter, files)
     spec_command = RubyEnv.ruby_command(project_path,
@@ -11,7 +12,7 @@ class Rspec2Adapter
       spec_command += " -O spec/spec.opts"
     end
 
-    "export RSPEC_COLOR=true; #{spec_command} #{files}"
+    "export RSPEC_COLOR=true; #{spec_command} #{files} #{args}".strip
   end
 
   def self.test_files(dir)

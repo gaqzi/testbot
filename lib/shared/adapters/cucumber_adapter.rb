@@ -1,12 +1,13 @@
 require File.expand_path(File.join(File.dirname(__FILE__), "/helpers/ruby_env"))
+require File.expand_path(File.join(File.dirname(__FILE__), "/helpers/base_adapter"))
 require File.expand_path(File.join(File.dirname(__FILE__), "../color"))
 
-class CucumberAdapter
-  
+class CucumberAdapter < BaseAdapter
+
   def self.command(project_path, ruby_interpreter, files)
     cucumber_command = RubyEnv.ruby_command(project_path, :script => "script/cucumber", :bin => "cucumber",
                                                           :ruby_interpreter => ruby_interpreter)
-    "export AUTOTEST=1; #{cucumber_command} -f progress --backtrace -r features/support -r features/step_definitions #{files} -t ~@disabled"
+    "export AUTOTEST=1; #{cucumber_command} -f progress --backtrace -r features/support -r features/step_definitions #{files} -t ~@disabled #{args}".strip
   end
  
   def self.test_files(dir)
@@ -55,6 +56,10 @@ class CucumberAdapter
     ].compact.join(', ') + ")"
 
     scenarios_line + "\n" + steps_line
+  end
+
+  def sum_results(*args)
+    self.class.sum_results(*args)
   end
 
 private

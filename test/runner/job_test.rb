@@ -29,7 +29,7 @@ module Testbot::Runner
     end
 
     should "be able to run a successful job" do
-      job = Job.new(Runner.new({}), 10, "00:00", "project", "/tmp/testbot/user", "spec", "ruby", "spec/foo_spec.rb spec/bar_spec.rb")
+      job = Job.new(Runner.new({}), 10, "00:00", "project", "/tmp/testbot/user", "spec", "ruby", "spec/foo_spec.rb spec/bar_spec.rb", "")
       flexmock(job).should_receive(:puts)
       stub_duration(0)
 
@@ -43,7 +43,7 @@ module Testbot::Runner
     end
 
     should "not raise an error when posting results time out" do
-      job = Job.new(Runner.new({}), 10, "00:00", "project", "/tmp/testbot/user", "spec", "ruby", "spec/foo_spec.rb spec/bar_spec.rb")
+      job = Job.new(Runner.new({}), 10, "00:00", "project", "/tmp/testbot/user", "spec", "ruby", "spec/foo_spec.rb spec/bar_spec.rb", "")
       flexmock(job).should_receive(:puts)
 
       # We're using send here because triggering post_results though the rest of the
@@ -55,7 +55,7 @@ module Testbot::Runner
     end
 
     should "not be successful when the job fails" do
-      job = Job.new(Runner.new({}), 10, "00:00", "project", "/tmp/testbot/user", "spec", "ruby", "spec/foo_spec.rb spec/bar_spec.rb")
+      job = Job.new(Runner.new({}), 10, "00:00", "project", "/tmp/testbot/user", "spec", "ruby", "spec/foo_spec.rb spec/bar_spec.rb", "")
       flexmock(job).should_receive(:puts)
       stub_duration(0)
 
@@ -66,7 +66,7 @@ module Testbot::Runner
     end
 
     should "set an instance number when the instance is not 0" do
-      job = Job.new(Runner.new({}), 10, "00:00", "project", "/tmp/testbot/user", "spec", "ruby", "spec/foo_spec.rb spec/bar_spec.rb")
+      job = Job.new(Runner.new({}), 10, "00:00", "project", "/tmp/testbot/user", "spec", "ruby", "spec/foo_spec.rb spec/bar_spec.rb", "")
       flexmock(job).should_receive(:puts)
       stub_duration(0)
 
@@ -79,7 +79,7 @@ module Testbot::Runner
     end
 
     should "return test runtime in milliseconds" do
-      job = Job.new(Runner.new({}), 10, "00:00", "project", "/tmp/testbot/user", "spec", "ruby", "spec/foo_spec.rb spec/bar_spec.rb")
+      job = Job.new(Runner.new({}), 10, "00:00", "project", "/tmp/testbot/user", "spec", "ruby", "spec/foo_spec.rb spec/bar_spec.rb", "")
       flexmock(job).should_receive(:puts)
 
       stub_duration(10.55)

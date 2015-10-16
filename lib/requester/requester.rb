@@ -59,6 +59,7 @@ module Testbot::Requester
       log "Requesting run" do
         response = HTTParty.post("#{server_uri}/builds", :body => { :root => root,
                                  :type => adapter.type.to_s,
+                                 :adapter_args => adapter.args,
                                  :project => config.project,
                                  :available_runner_usage => config.available_runner_usage,
                                  :files => files.join(' '),

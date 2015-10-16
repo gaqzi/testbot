@@ -115,7 +115,7 @@ module Testbot::Server
         get '/jobs/next', :version => Testbot.version
         assert last_response.ok?      
 
-        assert_equal [ job1.id, build.id, "things", "server:/project", "spec", "jruby", "spec/models/car_spec.rb" ].join(','), last_response.body
+        assert_equal [ job1.id, build.id, "things", "server:/project", "spec", "jruby", "spec/models/car_spec.rb", "" ].join(','), last_response.body
         assert job1.taken_at != nil
       end
 
@@ -125,7 +125,7 @@ module Testbot::Server
         job2 = Job.create :files => 'spec/models/house_spec.rb', :root => 'server:/project', :type => 'spec', :build => build, :project => 'things', :jruby => 0
         get '/jobs/next', :version => Testbot.version
         assert last_response.ok?
-        assert_equal [ job2.id, build.id, "things", "server:/project", "spec", "ruby", "spec/models/house_spec.rb" ].join(','), last_response.body
+        assert_equal [ job2.id, build.id, "things", "server:/project", "spec", "ruby", "spec/models/house_spec.rb", "" ].join(','), last_response.body
         assert job2.taken_at != nil
       end
 
@@ -245,7 +245,7 @@ module Testbot::Server
         assert_equal new_runner, old_taken_job.taken_by
 
         assert last_response.ok?
-        assert_equal [ old_taken_job.id, build.id.to_s, "things", "server:/project", "spec", "ruby", "spec/models/house_spec.rb" ].join(','), last_response.body
+        assert_equal [ old_taken_job.id, build.id.to_s, "things", "server:/project", "spec", "ruby", "spec/models/house_spec.rb", "" ].join(','), last_response.body
       end
 
     end

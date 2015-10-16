@@ -8,9 +8,9 @@ module Testbot::Runner
 
     TIME_TO_WAIT_BETWEEN_POSTING_RESULTS = 5
 
-    def initialize(runner, id, build_id, project, root, type, ruby_interpreter, files)
-      @runner, @id, @build_id, @project, @root, @type, @ruby_interpreter, @files =
-        runner, id, build_id, project, root, type, ruby_interpreter, files
+    def initialize(runner, id, build_id, project, root, type, ruby_interpreter, files, adapter_args)
+      @runner, @id, @build_id, @project, @root, @type, @ruby_interpreter, @files, @adapter_args =
+        runner, id, build_id, project, root, type, ruby_interpreter, files, adapter_args
       @success = true
     end
 
@@ -25,7 +25,8 @@ module Testbot::Runner
       result = "\n#{`hostname`.chomp}:#{Dir.pwd}\n"
       base_environment = "export RAILS_ENV=test; export TEST_ENV_NUMBER=#{test_env_number}; cd #{@project};"
 
-      adapter = Adapter.find(@type)
+      adapter_class = Adapter.find(@type)
+      adapter = adapter_class.new(@adapter_args)
       run_time = measure_run_time do
         result += run_and_return_result("#{base_environment} #{adapter.command(@project, ruby_cmd, @files)}")
       end

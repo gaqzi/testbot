@@ -27,12 +27,12 @@ class IntegrationTest < Test::Unit::TestCase
     # end
 
     sleep 2.0
-    result = `cd tmp/local; INTEGRATION_TEST=true ../../bin/testbot --spec --connect 127.0.0.1 --rsync_path ../server --rsync_ignores "log/* tmp/*"`
+    result = `cd tmp/local; INTEGRATION_TEST=true ../../bin/testbot --spec ignored_arg --connect 127.0.0.1 --rsync_path ../server --rsync_ignores "log/* tmp/*"`
 
     # Should include the result from script/spec
     #puts result.inspect
-    assert result.include?('script/spec got called with ["-O", "spec/spec.opts", "spec/models/house_spec.rb", "spec/models/car_spec.rb"]') ||
-           result.include?('script/spec got called with ["-O", "spec/spec.opts", "spec/models/car_spec.rb", "spec/models/house_spec.rb"]')
+    assert result.include?('script/spec got called with ["-O", "spec/spec.opts", "spec/models/house_spec.rb", "spec/models/car_spec.rb", "ignored_arg"]') ||
+           result.include?('script/spec got called with ["-O", "spec/spec.opts", "spec/models/car_spec.rb", "spec/models/house_spec.rb", "ignored_arg"]')
 
 
     # Should not include ignored files

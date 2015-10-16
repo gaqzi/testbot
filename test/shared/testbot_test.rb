@@ -162,6 +162,25 @@ module Testbot
             flexmock(mock).should_receive(:run_tests)
             CLI.run([ "--#{adapter.type}", "--connect", "192.168.0.100", '--project', 'rspec' ])
           end
+
+          should "accept arguments to the adapter" do
+            flexmock(Requester::Requester).should_receive(:new).once.
+                with(requester_attributes.merge({ :adapter_args => "-t @set_1" })).
+                and_return(mock = Object.new)
+            flexmock(mock).should_receive(:run_tests)
+            CLI.run([ "--#{adapter.type}", "-t", "@set_1" ,"--connect", "192.168.0.100"])
+          end
+
+          should "accept arguments to the adapter that are quoted" do
+            # Note that each argument needs to be quoted due to the simplistic argument parsing
+            # being used. It's advised to rather use short flags (-t @set_1) as the special
+            # parsing for long args doesn't come into it then.
+            flexmock(Requester::Requester).should_receive(:new).once.
+                with(requester_attributes.merge({ :adapter_args => "\"--tags @set_1\" \"--tags ~@wip\"" })).
+                and_return(mock = Object.new)
+            flexmock(mock).should_receive(:run_tests)
+            CLI.run([ "--#{adapter.type}", "\"--tags", "@set_1\"", "\"--tags", "~@wip\"" ,"--connect", "192.168.0.100"])
+          end
         end
       end
     end

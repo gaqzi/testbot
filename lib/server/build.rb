@@ -22,7 +22,8 @@ module Testbot::Server
                    :project => self.project,
                    :type => self.type,
                    :build => self,
-                   :jruby => self.jruby)
+                   :jruby => self.jruby,
+                   :adapter_args => self.adapter_args)
       end
     end
 

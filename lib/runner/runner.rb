@@ -101,7 +101,7 @@ module Testbot::Runner
         last_check_found_a_job = (next_job != nil && next_job.body != "")
         next unless last_check_found_a_job
 
-        job = Job.new(*([ self, next_job.split(',') ].flatten))
+        job = Job.new(*([ self, next_job.split(',', -1) ].flatten))
         if first_job_from_build?
           fetch_code(job)
           before_run(job)

@@ -41,7 +41,8 @@ module Testbot
         start_runner(opts)
       elsif opts[:runner] == 'stop'
         stop('runner', Testbot::RUNNER_PID)
-      elsif adapter = Adapter.all.find { |adapter| opts[adapter.type.to_sym] }
+      elsif adapter_class = Adapter.all.find { |adapter| opts[adapter.type.to_sym] }
+        adapter = adapter_class.new(opts[adapter_class.type.to_sym])
         require File.expand_path(File.join(File.dirname(__FILE__), '/../requester/requester'))
         start_requester(opts, adapter)
       end
@@ -54,7 +55,7 @@ module Testbot
       hash = {}
       str = ''
       argv.each_with_index do |arg, i|
-        if arg.include?('--')
+        if arg.start_with?('--')
           str = ''
           last_setter = arg.split('--').last.to_sym
           hash[last_setter] = true if (i == argv.size - 1) || argv[i+1].include?('--')
@@ -110,12 +111,18 @@ module Testbot
     end
 
     def self.start_requester(opts, adapter)
-      requester = Requester::Requester.new(:server_host            => opts[:connect],
-                                           :rsync_path             => opts[:rsync_path],
-                                           :rsync_ignores          => opts[:rsync_ignores].to_s,
-                                           :available_runner_usage => nil,
-                                           :project                => opts[:project],
-                                           :ssh_tunnel             => opts[:ssh_tunnel], :server_user => opts[:user])
+      args = {
+          :server_host => opts[:connect],
+          :rsync_path => opts[:rsync_path],
+          :rsync_ignores => opts[:rsync_ignores].to_s,
+          :available_runner_usage => nil,
+          :project => opts[:project],
+          :ssh_tunnel => opts[:ssh_tunnel],
+          :server_user => opts[:user],
+      }
+      args[:adapter_args] = adapter.args if adapter.args
+
+      requester = Requester::Requester.new(args)
       requester.run_tests(adapter, adapter.base_path)
     end
 

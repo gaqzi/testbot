@@ -1,10 +1,11 @@
 require File.expand_path(File.join(File.dirname(__FILE__), "/helpers/ruby_env"))
+require File.expand_path(File.join(File.dirname(__FILE__), "/helpers/base_adapter"))
 
-class TestUnitAdapter
+class TestUnitAdapter < BaseAdapter
   
   def self.command(project_path, ruby_interpreter, files)
     ruby_command = RubyEnv.ruby_command(project_path, :ruby_interpreter => ruby_interpreter)
-    %{#{ruby_command} -Itest -e '%w(#{files}).each { |file| require(Dir.pwd + "/" + file) }'}
+    %{#{ruby_command} -Itest -e '%w(#{files}).each { |file| require(Dir.pwd + "/" + file) }' #{args}}.strip
   end
   
   def self.test_files(dir)

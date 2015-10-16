@@ -1,16 +1,17 @@
 require File.expand_path(File.join(File.dirname(__FILE__), "/helpers/ruby_env"))
+require File.expand_path(File.join(File.dirname(__FILE__), "/helpers/base_adapter"))
 require File.expand_path(File.join(File.dirname(__FILE__), "../color"))
 
-class RspecAdapter
+class RspecAdapter < BaseAdapter
   
-  def self.command(project_path, ruby_interpreter, files)
+  def command(project_path, ruby_interpreter, files)
     spec_command = RubyEnv.ruby_command(project_path, :script => "script/spec", :bin => "rspec",
                                                       :ruby_interpreter => ruby_interpreter)
     if File.exists?("#{project_path}/spec/spec.opts")
       spec_command += " -O spec/spec.opts"
     end
 
-    "export RSPEC_COLOR=true; #{spec_command} #{files}"
+    "export RSPEC_COLOR=true; #{spec_command} #{files} #{args}".strip
   end
   
   def self.test_files(dir)
@@ -60,6 +61,10 @@ class RspecAdapter
     else
       Color.colorize(result, :red)
     end
+  end
+
+  def sum_results(*args)
+    self.class.sum_results(*args)
   end
 
 private
